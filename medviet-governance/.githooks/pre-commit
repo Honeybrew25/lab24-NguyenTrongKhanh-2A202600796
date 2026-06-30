@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+PROJECT_DIR=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
+cd "$PROJECT_DIR"
+
+if git secrets --version >/dev/null 2>&1; then
+    git secrets --scan
+else
+    python scripts/security_scan.py
+fi
+
+python -m bandit -q -r src -lll
